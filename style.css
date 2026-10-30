@@ -1,0 +1,98 @@
+/* AI講座 アンケートとワークのページ（2026-10-30）
+   見た目は公式LINEの特典ページ（line_present/site/style.css の game）とAI活用診断に合わせる: 青→紫の背景・ドット文字・白い窓・黄色いボタン・パッチのドット絵
+   池本さん「ページデザインはAI診断や特典ページみたいな感じでお願いします。でもあんまりごちゃごちゃせず見やすいようにね」→ 飾りは頭だけ。質問の窓は白く、文字は読みやすい丸ゴシック */
+:root{
+  --navy:#004aad;--lilac:#cb6ce6;--yellow:#fcc800;--yellow-hi:#ffe066;--pick:#fff4cf;
+  --paper:#fff;--ink:#1d1b29;--muted:#5f5b74;--rule:#e2def0;--quote:#f1eefa;
+  --night:#0d1a4a;--line:#0d1a4a;--edge:#0d1a4a;--head:#004aad;--err:#c0262d;--err-bg:#fdecec;
+  --f-dot:"DotGothic16","Zen Maru Gothic","Hiragino Sans",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#1f1c2a;--ink:#ecebf3;--muted:#a9a5bf;--rule:#34304a;--quote:#28243a;--pick:#3a3212;--night:#070f2e;--edge:#070f2e;--line:#8f8ab0;--head:#fcc800;--err:#ff8a8f;--err-bg:#3a1a1d;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#1f1c2a;--ink:#ecebf3;--muted:#a9a5bf;--rule:#34304a;--quote:#28243a;--pick:#3a3212;--night:#070f2e;--edge:#070f2e;--line:#8f8ab0;--head:#fcc800;--err:#ff8a8f;--err-bg:#3a1a1d;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;font-weight:500;font-size:16px;line-height:1.75;color:#fff;
+  background:linear-gradient(135deg,var(--navy),var(--lilac)) no-repeat;background-color:var(--lilac);word-break:auto-phrase;overflow-wrap:anywhere}
+body::before{content:"";position:fixed;inset:0;background-image:radial-gradient(#fff 1px,transparent 1.5px);background-size:22px 22px;opacity:.14;pointer-events:none;z-index:0}
+body>*{position:relative;z-index:1}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+
+/* 頭 */
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0 4px}
+.top .brand img{height:20px;width:auto;display:block;image-rendering:pixelated}
+.chip{font-family:var(--f-dot);font-size:13px;background:var(--yellow);color:#1d1b29;border:2px solid var(--night);border-radius:3px;padding:1px 10px;white-space:nowrap}
+.hero{display:grid;gap:12px;padding:14px 0 6px}
+.who{justify-self:start;font-family:var(--f-dot);font-size:13px;background:var(--night);color:#fff;border:2px solid #fff;border-radius:3px;padding:2px 10px}
+.hero h1{margin:0;font-family:var(--f-dot);font-weight:400;font-size:clamp(26px,7.4vw,36px);line-height:1.3;letter-spacing:.03em;text-shadow:3px 3px 0 rgba(13,26,74,.45);display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.hero h1 .hl{background:var(--yellow);color:#1d1b29;border:3px solid var(--line);border-radius:6px;padding:2px 12px;box-shadow:0 5px 0 var(--edge);text-shadow:none}
+.hero .sub{margin:-2px 0 0;font-weight:700;font-size:16.5px;text-shadow:0 1px 0 rgba(13,26,74,.6)}
+.lvrow{display:flex;align-items:flex-end;gap:12px}
+.msg{flex:1 1 auto;position:relative;background:var(--night);color:#fff;border:3px solid #fff;outline:3px solid var(--night);border-radius:6px;padding:11px 30px 12px 14px;margin:3px;font-family:var(--f-dot)}
+.msg p{margin:0;font-size:18px;line-height:1.55}
+.msg b{font-weight:400;color:var(--yellow)}
+.msg .cur{position:absolute;right:12px;bottom:10px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #fff;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.spr{flex:none;display:block;image-rendering:pixelated;width:81px;height:108px;background:url(img/patti_idle_r.png) 0 0/972px 108px no-repeat;animation:idle 1.6s steps(12) infinite}
+@keyframes idle{to{background-position:-972px 0}}
+@media (prefers-reduced-motion: reduce){.spr,.msg .cur{animation:none}}
+
+/* 白い窓 */
+.stack{display:grid;gap:14px;padding:10px 0 8px}
+.card{background:var(--paper);color:var(--ink);border:3px solid var(--line);border-radius:8px;padding:16px;box-shadow:0 5px 0 rgba(13,26,74,.35);min-width:0}
+.card h2{margin:0 0 6px;font-family:var(--f-dot);font-weight:400;font-size:18px;line-height:1.45;color:var(--head)}
+.card p:not([class]){margin:0}
+.use ul{list-style:none;margin:0;padding:0;font-size:15px}
+.card.q:focus{outline:none}
+.use li{padding-left:1em;text-indent:-1em;word-break:normal}
+.guide{margin:12px 0 -2px;font-family:var(--f-dot);font-size:19px;line-height:1.4;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:0 1px 0 rgba(13,26,74,.6)}
+.guide::before{content:"";flex:none;border:7px solid transparent;border-top-color:var(--yellow);border-bottom-width:0;margin-top:4px}
+.secnote{margin:-6px 0 0;font-size:14.5px;font-weight:700;text-shadow:0 1px 0 rgba(13,26,74,.6)}
+
+/* 質問 */
+.qt{display:flex;align-items:flex-start;gap:8px;margin:0 0 4px;font-weight:700;font-size:16.5px;line-height:1.6}
+.qt .grow{flex:1 1 auto;min-width:0}
+.no{flex:none;font-family:var(--f-dot);font-weight:400;font-size:14px;line-height:1.2;background:var(--night);color:var(--yellow);border-radius:4px;padding:3px 7px;margin-top:2px}
+.req{flex:none;font-size:11.5px;font-weight:700;line-height:1.2;background:var(--yellow);color:#1d1b29;border:1.5px solid var(--night);border-radius:3px;padding:2px 5px;margin-top:3px}
+.hint{margin:0 0 8px;font-size:14px;color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.opts.col{flex-direction:column;align-items:stretch}
+.opt{position:relative;display:block}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:block;padding:9px 14px;border:3px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink);font-size:15.5px;line-height:1.45;cursor:pointer;user-select:none}
+.opt input:checked+span{border-color:var(--line);background:var(--yellow);color:#1d1b29;font-weight:700;box-shadow:0 3px 0 var(--edge)}
+.opt input:focus-visible+span{outline:3px solid var(--navy);outline-offset:2px}
+input[type=text],textarea{display:block;width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:3px solid var(--rule);border-radius:6px;padding:10px 12px}
+textarea{min-height:96px;resize:vertical;line-height:1.7}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--navy)}
+input.other{margin-top:8px;display:none}
+input.other.show{display:block}
+.yen{display:flex;align-items:center;gap:8px;max-width:260px}
+.yen input{text-align:right;font-variant-numeric:tabular-nums}
+.yen span{font-weight:700}
+.err{display:none;margin:8px 0 0;font-size:14px;font-weight:700;color:var(--err)}
+.card.bad{border-color:var(--err);background:linear-gradient(var(--err-bg),var(--err-bg)) top/100% 6px no-repeat,var(--paper)}
+.card.bad .err{display:block}
+
+/* ワーク: 池本の例と考え方 */
+.ex{margin:8px 0 0;background:var(--pick);border-left:6px solid var(--yellow);border-radius:6px;padding:8px 12px;font-size:15px;white-space:pre-line}
+.ex b{display:block;font-family:var(--f-dot);font-weight:400;font-size:13px;color:var(--muted)}
+details.how{margin:8px 0 0;font-size:15px}
+details.how summary{cursor:pointer;font-weight:700;color:var(--head)}
+details.how ul{list-style:none;margin:4px 0 0;padding:0}
+details.how li{padding-left:1em;text-indent:-1em}
+.work textarea{min-height:130px;margin-top:10px}
+
+/* 送る */
+.btn{display:block;width:100%;margin:8px 0 6px;padding:13px 16px;font:inherit;font-family:var(--f-dot);font-size:21px;letter-spacing:.06em;cursor:pointer;background:var(--yellow);color:#1d1b29;border:3px solid var(--line);border-radius:6px;box-shadow:0 5px 0 var(--edge);transition:transform .05s}
+.btn:hover{background:var(--yellow-hi)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--edge)}
+.btn:disabled{opacity:.65;cursor:wait}
+.btn.ghost{background:var(--paper);color:var(--ink);font-size:16px;padding:10px 14px}
+.small{margin:0;font-size:13.5px;text-align:center;text-shadow:0 1px 0 rgba(13,26,74,.6)}
+.done{display:grid;gap:12px;text-align:center}
+.done h2{font-size:22px;margin:0}
+.mine{text-align:left;white-space:pre-wrap;background:var(--quote);border-radius:6px;padding:10px 12px;font-size:15px;margin:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+select{font:inherit;font-size:16px;padding:8px 10px;border:3px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink);margin-top:8px}
+footer{text-align:center;font-size:13px;padding:18px 16px 30px;opacity:.9}

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI講座 ワーク｜STUDIO PATTI</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=DotGothic16&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20261030c">
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><span class="brand"><img src="img/nav_logo.png" alt="STUDIO PATTI"></span><span class="chip">ワーク</span></header>
+  <section class="hero">
+    <span class="who">がんばる親の「やりたい」を叶えるAI講座</span>
+    <h1 id="ttl">ワーク</h1>
+    <p class="sub" id="sub"></p>
+    <div class="lvrow"><div class="msg"><p>やりたい事を、ことばにしよう！</p><span class="cur"></span></div><span class="spr" aria-hidden="true"></span></div>
+  </section>
+  <main id="app"><noscript><div class="card">このページは JavaScript を使います。ブラウザの設定で有効にしてください。</div></noscript></main>
+  <footer>合同会社スタジオパッチ　池本 将</footer>
+</div>
+<script src="form.js?v=20261030c"></script>
+<script>
+// 各回のワーク（2026-10-30）。?kai=1 が第1回のワーク。送ると、アンケートと同じく池本さんのメールにPDF・顧客管理のその人の欄に出る
+// 池本さん「最初はエクセルで送って…せっかくならページ作って入力してもらったら、アンケート同様顧客管理に反映されて、データとして溜まっていく」
+// 中身の元: ★AI講座/★AI講座/#1「やりたい事」の明確化/【#1ワーク】理念と目標とやりたい事の明確化.xlsx（例と考え方はそのまま。「月毎の目標が決める」だけ「を」に直した）
+var WORKS = {
+  1: {
+    sub: "理念と目標とやりたい事の明確化",
+    sections: [{q: [
+      {id: "w1", t: "理念", type: "long", empty: "あなたの理念を書いてください",
+        ex: "創造を通して\n子どもと挑戦する人に\n新しい可能性とおもしろい未来を贈る",
+        how: ["事業をする「目的」であり「意義」", "大義名分であり、公明正大であること", "その「理念」で他の人を巻き込めるか", "池本は「誰に、何を、どう届けたいか」を意識して考えました"]},
+      {id: "w2", t: "目標（今年1年の目標）", type: "long", empty: "今年1年の目標を書いてください",
+        ex: "（例1）人の役に立ち喜んで頂く\n（例2）会社の当期純利益を1,000万円にする",
+        how: ["具体的で未来の展望を描いているか", "中長期目標はなくていい", "１年の目標でOK", "池本は数値目標は苦手なのと、他人に依存した目標は設定しないようにしています。"]},
+      {id: "w3", t: "今やりたい事", type: "long", empty: "今やりたい事を書いてください",
+        ex: "「AI講座」を構築し、\n人の役に立とうと頑張る親に届ける",
+        how: ["１年の目標から月毎の目標を決める", "その月毎の目標を達成するために、今やりたい事を明確にする"]}
+    ]}]
+  }
+};
+var n = Number((/[?&]kai=(\d{1,2})(?:&|$)/.exec(location.search) || [])[1] || 0);
+if (WORKS[n]) document.getElementById("sub").textContent = WORKS[n].sub;
+AIFORM.start({
+  form: "work", title: "ワーク", kaiSuffix: "ワーク", draft: "aiwork_", maxKai: 1, keepCopy: true,
+  useTitle: "書いた内容の使い道",
+  kinds: function (k) {
+    return {
+      use: ["講座を良くするためと、あなたに合わせて進めるために活用します。", "外に出すときは、先にお見せして、OKをもらってからにします。", "AIでまとめるときは、お名前を消してから入力します。"],
+      sections: WORKS[k].sections
+    };
+  },
+  doneText: "おつかれさまでした！書いてくれてありがとうございます。"
+});
+</script>
+</body>
+</html>
