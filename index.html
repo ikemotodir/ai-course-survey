@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI講座 アンケート｜STUDIO PATTI</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--ink:#1d1b29;--sub:#5a6370;--navy:#1f3a5f;--line:#d3dbe6;--pick:#fff4cf;--yellow:#fcc800;--yellow-hi:#ffd83a;--err:#c0262d;--note:#eef3f9}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0f1524;--card:#18213a;--ink:#eef1f7;--sub:#aab3c2;--navy:#9ec3ff;--line:#33405e;--pick:#3a3212;--note:#1d2843;--err:#ff7b81}}
+:root[data-theme="dark"]{--bg:#0f1524;--card:#18213a;--ink:#eef1f7;--sub:#aab3c2;--navy:#9ec3ff;--line:#33405e;--pick:#3a3212;--note:#1d2843;--err:#ff7b81}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Zen Maru Gothic","Hiragino Sans","Yu Gothic",sans-serif;font-weight:500;line-height:1.7;font-size:16px}
+.top{background:#1f3a5f;color:#fff;padding:18px 16px 16px}
+.top .in,.wrap{max-width:640px;margin:0 auto}
+.top .kicker{font-size:13px;opacity:.85;margin:0}
+.top h1{font-size:24px;line-height:1.35;margin:2px 0 0;font-weight:900}
+.wrap{padding:16px 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 14px}
+.lead p{margin:0 0 4px}
+.lead .must{font-weight:700}
+.use{background:var(--note);border:0;font-size:14px;color:var(--ink)}
+.use h2{font-size:15px;margin:0 0 4px;color:var(--navy)}
+.use p{margin:0 0 2px}
+details summary{cursor:pointer;color:var(--navy);font-weight:700}
+h2.sec{font-size:18px;color:var(--navy);margin:22px 0 8px;padding-left:10px;border-left:5px solid var(--navy);line-height:1.4}
+.secnote{font-size:14px;color:var(--sub);margin:-4px 0 10px}
+.q{margin:0}
+.q .qt{font-weight:700;font-size:16.5px;margin:0 0 2px}
+.q .qt .no{color:var(--navy);margin-right:6px}
+.q .qt .star{color:#c98a00}
+.q .hint{font-size:14px;color:var(--sub);margin:0 0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-block;padding:9px 14px;border:2px solid var(--line);border-radius:999px;background:var(--card);font-size:15px;line-height:1.4;cursor:pointer;user-select:none}
+.opt input:checked+span{border-color:var(--navy);background:var(--pick);font-weight:700}
+.opt input:focus-visible+span{outline:3px solid var(--yellow);outline-offset:2px}
+.opts.col{flex-direction:column;align-items:stretch}
+.opts.col .opt span{display:block;border-radius:10px}
+.other{margin-top:8px;display:none}
+.other.show{display:block}
+input[type=text],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:88px;resize:vertical}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--navy)}
+.req{white-space:nowrap;font-size:12px;font-weight:700;background:var(--navy);color:#fff;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.err{color:var(--err);font-size:14px;font-weight:700;margin:6px 0 0;display:none}
+.card.bad{border-color:var(--err)}
+.card.bad .err{display:block}
+.send{display:block;width:100%;margin:22px 0 8px;padding:15px;border:0;border-radius:12px;background:var(--yellow);color:#1d1b29;font:inherit;font-weight:900;font-size:19px;cursor:pointer;box-shadow:0 4px 0 #c99d00}
+.send:hover{background:var(--yellow-hi)}
+.send:disabled{opacity:.6;cursor:wait}
+.small{font-size:13.5px;color:var(--sub);text-align:center;margin:0}
+.done{text-align:center;padding:28px 16px}
+.done h2{font-size:22px;color:var(--navy);margin:0 0 6px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+footer{text-align:center;font-size:13px;color:var(--sub);padding:0 16px 28px}
+select{font:inherit;font-size:16px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <p class="kicker">がんばる親の「やりたい」を叶えるAI講座</p>
+  <h1 id="ttl">アンケート</h1>
+</div></header>
+
+<main class="wrap" id="app">
+  <noscript><div class="card">このページは JavaScript を使います。ブラウザの設定で有効にしてください。</div></noscript>
+</main>
+<footer>合同会社スタジオパッチ　池本 将</footer>
+
+<script>
+// 各回のアンケート（2026-10-30）。?kai=1 が第1回、?kai=2〜7 がふだんの回、?kai=8 が最後の回
+// 答えは送信先（池本さんのGoogle）にだけ送る。このページには受講生の情報を入れない
+var ENDPOINT = "https://script.google.com/macros/s/AKfycbzHl-0plUqnlLYwCqqWNoXRzbBwHgZnzwpY9AOCmANaQ8-0xdLVr7OB_B0sIRPedJfr/exec";
+
+var USE_BASE = [
+  "講座をもっと良くするためと、これから受ける方への届け方を考えるために活用します。",
+  "講座の案内に使うときは、名前を出さずに、受けた方全員の人数としてまとめてお出しします。",
+  "それ以外で外に出すときは、載せる文・場所・期間・お名前の出し方・広告に使うかを先に文字でお見せし、OKをもらってからにします。",
+  "断っても何も変わりません。載せたあとでも取り下げられます。",
+  "まとめる時にAIを使う場合は、お名前を消してから入力します。"
+];
+
+var Q_STAR = [
+  {id: "q1", star: true, t: "今日の感想を教えてください。", hint: "いちばん心に残ったこと、またはできたことをひとつ", type: "text", required: true},
+  {id: "q2", star: true, t: "分かりにくかった所や、ほかに「これも教えてほしい」事はありますか？", hint: "なければ空欄でOK", type: "text"}
+];
+var Q_TODAY = [
+  {id: "q3", t: "今日の講座は、全体としてどうでしたか？", type: "one", o: ["とても良い", "良い", "ふつう", "いまいち", "よくない"]},
+  {id: "q4", t: "内容の分かりやすさはどうでしたか？", type: "one", o: ["よく分かった", "分かった", "ふつう", "やや難しい", "難しい"]},
+  {id: "q5", t: "今日の長さと進み方はどうでしたか？", type: "one", o: ["ちょうどいい", "速い・時間が足りない", "ゆっくり・長い"]}
+];
+var NEAR = ["結局なにに使えばいいか分からない", "AIの答えが自分っぽくない", "あれもこれもで、どれも途中", "頭の中がまとまらない", "事務（予約・お客さん管理）に時間をとられる", "家族との時間がとれない", "その他"];
+var USE_FREQ = ["使っていない", "月に数回", "週に数回", "ほぼ毎日"];
+
+var KINDS = {
+  first: {
+    sections: [
+      {t: "毎回のアンケート（モニターのお約束）", q: Q_STAR},
+      {t: "第1回の講座について", note: "ここからは、答えられる所だけでOK", q: Q_TODAY.concat([
+        {id: "q6", t: "申し込む前に聞いていた話と、今日の第1回はちがいましたか？", type: "one", o: ["聞いていた通り", "聞いていたより良かった", "ちがった"], other: "ちがった", otherLabel: "どこがちがいましたか"}
+      ])},
+      {t: "あなたのこと", note: "これからの回を、あなたに合わせるためにお聞きします。", q: [
+        {id: "q7", t: "申し込む前は、AIをどれくらい使っていましたか？", type: "one", o: ["使っていなかった", "月に数回", "週に数回", "ほぼ毎日"]},
+        {id: "q8", t: "講座を受ける前、近かったのはどれですか？", hint: "いくつでも", type: "many", o: NEAR, other: "その他", col: true},
+        {id: "q9", t: "講座が終わったとき、何ができていたら受けてよかったと思えますか？", hint: "ひとつでOK。今日書いた目標を、そのまま書き写してもOK", ph: "例：予約の受付を、AIで作った道具に任せている", type: "text"},
+        {id: "q10", t: "AIに任せたいことはどれですか？", hint: "いくつでも", type: "many", o: ["SNSの投稿", "文章（ブログ・お知らせ・メール）", "画像・デザイン", "動画", "お客さん・予約の管理", "事務（資料・お金の管理）", "調べもの・学び", "アプリや道具づくり", "その他"], other: "その他"}
+      ]},
+      {t: "申し込んだときのこと", note: "これから受ける方に届けるために、今回だけお聞きします。", q: [
+        {id: "q11", t: "申し込む前に、迷ったこと・心配だったことはありますか？", hint: "いくつでも", type: "many", o: ["料金", "時間がとれるか", "ついていけるか", "パソコンやAIの準備", "AIの利用料（月々）", "家族への相談", "分からない時に質問できるか", "申し込み前の説明に分かりにくい所があった", "特になかった", "その他"], other: "その他", col: true},
+        {id: "q12", t: "独学・YouTube・ほかの講座などではなく、この講座にした決め手は何ですか？", hint: "いくつでも", type: "many", o: ["池本の実際のAI画面を見た", "伴走してくれそうだった", "自分の悩みに合っていた", "料金", "その他"], other: "その他", col: true},
+        {id: "q13", t: "相談や案内で心に残った言葉があれば、ひとこと教えてください。", type: "text", small: true}
+      ]}
+    ],
+    use: USE_BASE.slice(0, 1).concat(["講座の前と後でどう変わったかを比べるため、最後の回でも同じ質問をいくつかします。"], USE_BASE.slice(1))
+  },
+  usual: {
+    sections: [
+      {t: "毎回のアンケート（モニターのお約束）", q: Q_STAR},
+      {t: "今日の講座について", note: "ここからは、答えられる所だけでOK", q: Q_TODAY}
+    ],
+    use: USE_BASE
+  },
+  last: {
+    sections: [
+      {t: "毎回のアンケート（モニターのお約束）", q: Q_STAR},
+      {t: "今日の講座について", note: "ここからは、答えられる所だけでOK", q: Q_TODAY},
+      {t: "講座を受けてみて", note: "第1回の答えと比べるために、同じ質問をします。", q: [
+        {id: "q6", t: "今は、AIをどれくらい使っていますか？", type: "one", o: USE_FREQ},
+        {id: "q7", t: "今の自分に近いのはどれですか？", hint: "いくつでも", type: "many", o: NEAR, other: "その他", col: true},
+        {id: "q8", t: "第1回で書いた「受けてよかったと思えること」は、できましたか？", type: "one", o: ["できた", "一部できた", "まだ"], other: "一部できた", otherLabel: "どこまでできたか、ひとこと"},
+        {id: "q9", t: "講座の値段について、受けてみてどう感じますか？", type: "one", o: ["安い", "ちょうどいい", "高い"]},
+        {id: "q10", t: "この講座が合いそうな人は、まわりにいますか？", hint: "お名前や、だれか分かる書き方はしないでください", type: "many", o: ["会社で働く親", "お店や教室をしている親", "フリーランスの親", "いない・わからない", "その他"]}
+      ]}
+    ],
+    use: USE_BASE.slice(0, 1).concat(["第1回の答えと比べて、講座の前と後でどう変わったかを見るために活用します。"], USE_BASE.slice(1))
+  }
+};
+
+function kaiInfo() {
+  var m = /[?&]kai=(\d{1,2})/.exec(location.search);
+  var n = m ? Number(m[1]) : 0;
+  if (!n) return null;
+  return {n: n, label: "第" + n + "回", kind: n === 1 ? "first" : (n >= 8 ? "last" : "usual")};
+}
+
+function el(tag, attrs, kids) {
+  var e = document.createElement(tag);
+  for (var k in (attrs || {})) {
+    if (k === "text") e.textContent = attrs[k];
+    else if (k === "cls") e.className = attrs[k];
+    else e.setAttribute(k, attrs[k]);
+  }
+  (kids || []).forEach(function (c) { if (c) e.appendChild(c); });
+  return e;
+}
+
+function store(key, val) {
+  try { if (val === undefined) return JSON.parse(localStorage.getItem(key) || "null"); localStorage.setItem(key, JSON.stringify(val)); } catch (e) { return null; }
+}
+
+function render() {
+  var app = document.getElementById("app");
+  app.innerHTML = "";
+  var info = kaiInfo();
+  if (!info) {
+    document.getElementById("ttl").textContent = "アンケート";
+    var sel = el("select", {id: "pick"});
+    sel.appendChild(el("option", {value: "", text: "選んでください"}));
+    for (var i = 1; i <= 8; i++) sel.appendChild(el("option", {value: i, text: "第" + i + "回"}));
+    sel.addEventListener("change", function () { if (sel.value) { location.search = "?kai=" + sel.value; } });
+    app.appendChild(el("div", {cls: "card"}, [el("p", {text: "何回目の講座のアンケートですか？"}), sel]));
+    return;
+  }
+  var K = KINDS[info.kind];
+  document.getElementById("ttl").textContent = info.label + "のアンケート";
+  var draftKey = "aisurvey_" + info.n;
+  var draft = store(draftKey) || {};
+
+  app.appendChild(el("div", {cls: "card lead"}, [
+    el("p", {text: "講座、ありがとうございました！"}),
+    el("p", {cls: "must", text: "モニターのお約束は、★の付いた質問だけです。"}),
+    el("p", {text: "ほかの質問は、答えられる所だけで大丈夫です。答えなくても講座は何も変わりません。"})
+  ]));
+  var use = el("details", {cls: "card use", open: "open"});  // 答える前に読めるよう、最初から開いておく
+  use.appendChild(el("summary", {text: "いただいた答えの使い道"}));
+  K.use.forEach(function (t) { use.appendChild(el("p", {text: t})); });
+  app.appendChild(use);
+
+  var form = el("form", {id: "f", novalidate: "novalidate"});
+  var nameCard = el("div", {cls: "card q", id: "c_name"}, [
+    el("p", {cls: "qt", text: "お名前"}, []),
+    el("input", {type: "text", id: "name", autocomplete: "nickname", placeholder: "ニックネームでOK", maxlength: "40"}),
+    el("p", {cls: "err", text: "お名前を入れてください"})
+  ]);
+  nameCard.querySelector(".qt").appendChild(el("span", {cls: "req", text: "必須"}));
+  form.appendChild(nameCard);
+
+  var no = 0;
+  K.sections.forEach(function (sec) {
+    form.appendChild(el("h2", {cls: "sec", text: sec.t}));
+    if (sec.note) form.appendChild(el("p", {cls: "secnote", text: sec.note}));
+    sec.q.forEach(function (q) {
+      no += 1; q.no = "Q" + no;
+      var card = el("div", {cls: "card q", id: "c_" + q.id});
+      var qt = el("p", {cls: "qt"});
+      if (q.star) qt.appendChild(el("span", {cls: "star", text: "★"}));
+      qt.appendChild(el("span", {cls: "no", text: q.no}));
+      qt.appendChild(document.createTextNode(q.t));
+      if (q.required) qt.appendChild(el("span", {cls: "req", text: "必須"}));
+      card.appendChild(qt);
+      if (q.hint) card.appendChild(el("p", {cls: "hint", text: q.hint}));
+      if (q.type === "text") {
+        var ta = el("textarea", {id: q.id, maxlength: "3000"});
+        if (q.ph) ta.setAttribute("placeholder", q.ph);
+        if (q.small) ta.style.minHeight = "60px";
+        card.appendChild(ta);
+      } else {
+        var box = el("div", {cls: "opts" + (q.col ? " col" : "")});
+        q.o.forEach(function (o, i) {
+          var inp = el("input", {type: q.type === "one" ? "radio" : "checkbox", name: q.id, value: o, id: q.id + "_" + i});
+          box.appendChild(el("label", {cls: "opt", "for": q.id + "_" + i}, [inp, el("span", {text: o})]));
+        });
+        card.appendChild(box);
+        if (q.other) {
+          var ot = el("input", {type: "text", id: q.id + "_other", cls: "other", placeholder: q.otherLabel || "ひとことで", maxlength: "300"});
+          card.appendChild(ot);
+          box.addEventListener("change", function () {
+            var on = !!box.querySelector('input[value="' + q.other + '"]:checked');
+            ot.classList.toggle("show", on);
+          });
+        }
+      }
+      if (q.required) card.appendChild(el("p", {cls: "err", text: "ここだけは、ひとことお願いします"}));
+      form.appendChild(card);
+    });
+  });
+  form.appendChild(el("input", {type: "text", name: "website", cls: "hp", tabindex: "-1", autocomplete: "off", "aria-hidden": "true"}));
+  var btn = el("button", {type: "submit", cls: "send", text: "送信"});
+  form.appendChild(btn);
+  form.appendChild(el("p", {cls: "small", text: "送ると、池本にだけ届きます。"}));
+  app.appendChild(form);
+
+  // 書きかけを、この端末にだけ残す（閉じても消えないように）
+  restore(form, draft);
+  form.addEventListener("input", function () { store(draftKey, snapshot(form)); });
+  form.addEventListener("change", function () { store(draftKey, snapshot(form)); });
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var bad = null;
+    ["c_name"].concat(K.sections.reduce(function (a, s) { return a.concat(s.q.filter(function (q) { return q.required; }).map(function (q) { return "c_" + q.id; })); }, [])).forEach(function (cid) {
+      var c = document.getElementById(cid);
+      var v = c.querySelector("input[type=text],textarea").value.trim();
+      c.classList.toggle("bad", !v);
+      if (!v && !bad) bad = c;
+    });
+    if (bad) { bad.scrollIntoView({behavior: "smooth", block: "center"}); return; }
+    var items = [];
+    K.sections.forEach(function (sec) {
+      sec.q.forEach(function (q) {
+        var a;
+        if (q.type === "text") a = document.getElementById(q.id).value.trim();
+        else {
+          a = Array.prototype.map.call(form.querySelectorAll('input[name="' + q.id + '"]:checked'), function (x) { return x.value; }).join("、");
+          var ot = document.getElementById(q.id + "_other");
+          if (ot && ot.classList.contains("show") && ot.value.trim()) a += "（" + ot.value.trim() + "）";
+        }
+        items.push({q: (q.star ? "★" : "") + q.no + " " + q.t, a: a});
+      });
+    });
+    var body = {kai: info.label, name: document.getElementById("name").value.trim(), items: items, website: form.querySelector(".hp").value};
+    btn.disabled = true; btn.textContent = "送っています…";
+    fetch(ENDPOINT, {method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(body)})
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || !j.ok) throw new Error(j && j.error);
+        try { localStorage.removeItem(draftKey); } catch (e) {}
+        app.innerHTML = "";
+        app.appendChild(el("div", {cls: "card done"}, [el("h2", {text: "送信しました"}), el("p", {text: "ご協力ありがとうございます！次の回もよろしくお願いします。"})]));
+        window.scrollTo(0, 0);
+      })
+      .catch(function () {
+        btn.disabled = false; btn.textContent = "送信";
+        alert("送れませんでした。少し時間をおいて、もう一度「送信」を押してください。書いた内容は残っています。");
+      });
+  });
+}
+
+function snapshot(form) {
+  var s = {};
+  Array.prototype.forEach.call(form.querySelectorAll("input,textarea"), function (x) {
+    if (x.classList.contains("hp")) return;
+    if (x.type === "radio" || x.type === "checkbox") { if (x.checked) s[x.id] = true; }
+    else if (x.id) s[x.id] = x.value;
+  });
+  return s;
+}
+function restore(form, s) {
+  Object.keys(s || {}).forEach(function (id) {
+    var x = document.getElementById(id);
+    if (!x) return;
+    if (x.type === "radio" || x.type === "checkbox") x.checked = !!s[id];
+    else x.value = s[id];
+  });
+  Array.prototype.forEach.call(form.querySelectorAll(".opts"), function (b) { b.dispatchEvent(new Event("change", {bubbles: true})); });
+}
+
+render();
+</script>
+</body>
+</html>
