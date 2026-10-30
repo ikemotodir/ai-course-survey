@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=DotGothic16&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20261030c">
+<link rel="stylesheet" href="style.css?v=20261030d">
 </head>
 <body>
 <div class="wrap">
@@ -20,7 +20,7 @@
   <main id="app"><noscript><div class="card">このページは JavaScript を使います。ブラウザの設定で有効にしてください。</div></noscript></main>
   <footer>合同会社スタジオパッチ　池本 将</footer>
 </div>
-<script src="form.js?v=20261030c"></script>
+<script src="form.js?v=20261030d"></script>
 <script>
 // 各回のアンケート（2026-10-30）。?kai=1 が第1回、?kai=2〜7 がふだんの回、?kai=8 が最後の回、?kai=9・10 が追加の回
 // 2026-10-30 夕 池本さんの直し: 冒頭のお約束の文を消す／使い道を短く「・」付きで／全部必須／見出しの（モニターのお約束）と★を消す／「答えられる所だけでOK」を消す／申し込んだときのことに値段の質問
@@ -31,7 +31,7 @@ var USE = [
   "AIでまとめるときは、お名前を消してから入力します。"
 ];
 var Q_EVERY = [
-  {id: "q1", t: "今日の感想を教えてください。", hint: "いちばん心に残ったこと、またはできたことをひとつ", type: "text"},
+  {id: "q1", t: "今日の感想を教えてください。", hint: "いちばん心に残ったこと、またはできたことを1つ　など", type: "text"},
   {id: "q2", t: "分かりにくかった所や、ほかに「これも教えてほしい」事はありますか？", hint: "なければ「なし」でOK", type: "text", small: true}
 ];
 var Q_TODAY = [
@@ -60,11 +60,14 @@ function kinds(n) {
       {t: "申し込んだときのこと", note: "これから受ける方に届けるために、今回だけお聞きします。", q: [
         {id: "q11", t: "申し込む前に、迷ったこと・心配だったことはありますか？", hint: "いくつでも", type: "many", o: ["料金", "時間がとれるか", "ついていけるか", "パソコンやAIの準備", "AIの利用料（月々）", "家族への相談", "分からない時に質問できるか", "申し込み前の説明に分かりにくい所があった", "特になかった", "その他"], other: "その他", col: true},
         {id: "q12", t: "独学・YouTube・ほかの講座などではなく、この講座にした決め手は何ですか？", hint: "いくつでも", type: "many", o: ["池本の実際のAI画面を見た", "伴走してくれそうだった", "自分の悩みに合っていた", "料金", "その他"], other: "その他", col: true},
-        {id: "p1", lead: "ここからは、この講座（オンライン・全8回・1回60分）の値段の感じ方をお聞きします。払った金額ではなく、あなたの感覚で答えてください。", t: "いくらだと「安すぎて、内容が心配」と感じますか？", hint: PRICE_HINT, type: "yen"},
+        {id: "q13", t: "相談や案内で、心に残った言葉を教えてください。", hint: "特になければ「なし」でOK", type: "text", small: true}
+      ]},
+      // 2026-10-30 夕 池本さん「他と同じく前の項目と少しスペース空けて、「▼」付けて、「▼料金について」」→ 値段の4問を見出しつきの別の段に（心に残った言葉は申し込んだときのことの最後へ）
+      {t: "料金について", note: "この講座（オンライン・全8回・1回60分）の値段の感じ方をお聞きします。払った金額ではなく、あなたの感覚で答えてください。", q: [
+        {id: "p1", t: "いくらだと「安すぎて、内容が心配」と感じますか？", hint: PRICE_HINT, type: "yen"},
         {id: "p2", t: "いくらだと「安い（お得）」と感じますか？", hint: PRICE_HINT, type: "yen", after: "p1"},
         {id: "p3", t: "いくらだと「高い。でも受ける価値はある」と感じますか？", hint: PRICE_HINT, type: "yen", after: "p2"},
-        {id: "p4", t: "いくらだと「高すぎて、受けない」と感じますか？", hint: PRICE_HINT, type: "yen", after: "p3"},
-        {id: "q13", t: "相談や案内で、心に残った言葉を教えてください。", hint: "特になければ「なし」でOK", type: "text", small: true}
+        {id: "p4", t: "いくらだと「高すぎて、受けない」と感じますか？", hint: PRICE_HINT, type: "yen", after: "p3"}
       ]}
     ]
   };
@@ -91,8 +94,10 @@ function kinds(n) {
   };
 }
 
+// 最後の質問の下のひとこと: 第1〜7回は「次の回もよろしく」、最後の回と追加の回はお礼だけ
+function endNote(n) { return n < 8 ? "ありがとうございました！\n第" + (n + 1) + "回もよろしくお願いします♪" : "ありがとうございました！"; }
 // 送ったあとの文: 最後の回（8）と追加の回（9・10）は「次の回も」を付けない
-AIFORM.start({form: "survey", title: "アンケート", draft: "aisurvey_", kinds: kinds, doneText: function (n) { return n < 8 ? "ご協力ありがとうございます！次の回もよろしくお願いします。" : "ご協力ありがとうございます！"; }});
+AIFORM.start({form: "survey", title: "アンケート", draft: "aisurvey_", kinds: kinds, endNote: endNote, doneText: function (n) { return n < 8 ? "ご協力ありがとうございます！次の回もよろしくお願いします。" : "ご協力ありがとうございます！"; }});
 </script>
 </body>
 </html>

@@ -89,6 +89,7 @@ details.how li{padding-left:1em;text-indent:-1em}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--edge)}
 .btn:disabled{opacity:.65;cursor:wait}
 .btn.ghost{background:var(--paper);color:var(--ink);font-size:16px;padding:10px 14px}
+.endnote{margin:10px 0 0;text-align:center;white-space:pre-line;font-family:var(--f-dot);font-size:19px;line-height:1.6;text-shadow:0 1px 0 rgba(13,26,74,.6)}
 .small{margin:0;font-size:13.5px;text-align:center;text-shadow:0 1px 0 rgba(13,26,74,.6)}
 .done{display:grid;gap:12px;text-align:center}
 .done h2{font-size:22px;margin:0}

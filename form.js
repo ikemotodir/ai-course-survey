@@ -129,6 +129,9 @@
       });
     });
     form.appendChild(el("input", {type: "text", name: "x_hp", id: "x_hp", cls: "hp", tabindex: "-1", autocomplete: "off", "aria-hidden": "true"}));
+    // 最後の質問の下のひとこと（2026-10-30 夕 池本さん「Q17の下に、「ありがとうございました！（改行）第2回もよろしくお願いします♪」」）
+    var endNote = typeof spec.endNote === "function" ? spec.endNote(info.n) : spec.endNote;
+    if (endNote) form.appendChild(el("p", {cls: "endnote", text: endNote}));
     var btn = el("button", {type: "submit", cls: "btn", text: "送信"});
     form.appendChild(el("div", {}, [btn, el("p", {cls: "small", text: "送ると、池本にだけ届きます。"}), el("p", {cls: "small", text: "書きかけはこの端末にだけ残り、送ると消えます。"})]));
     app.appendChild(form);
