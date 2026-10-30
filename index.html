@@ -134,7 +134,7 @@ var KINDS = {
         {id: "q7", t: "今の自分に近いのはどれですか？", hint: "いくつでも", type: "many", o: NEAR, other: "その他", col: true},
         {id: "q8", t: "第1回で書いた「受けてよかったと思えること」は、できましたか？", type: "one", o: ["できた", "一部できた", "まだ"], other: "一部できた", otherLabel: "どこまでできたか、ひとこと"},
         {id: "q9", t: "講座の値段について、受けてみてどう感じますか？", type: "one", o: ["安い", "ちょうどいい", "高い"]},
-        {id: "q10", t: "この講座が合いそうな人は、まわりにいますか？", hint: "お名前や、だれか分かる書き方はしないでください", type: "many", o: ["会社で働く親", "お店や教室をしている親", "フリーランスの親", "いない・わからない", "その他"]}
+        {id: "q10", t: "この講座が合いそうな人は、まわりにいますか？", hint: "お名前や、だれか分かる書き方はしないでください", type: "many", o: ["会社で働く親", "お店や教室をしている親", "フリーランスの親", "いない・わからない"]}
       ]}
     ],
     use: USE_BASE.slice(0, 1).concat(["第1回の答えと比べて、講座の前と後でどう変わったかを見るために活用します。"], USE_BASE.slice(1))
@@ -144,7 +144,7 @@ var KINDS = {
 function kaiInfo() {
   var m = /[?&]kai=(\d{1,2})/.exec(location.search);
   var n = m ? Number(m[1]) : 0;
-  if (!n) return null;
+  if (!(n >= 1 && n <= 10)) return null;
   // 顧客管理は追加の回を 9・10 で送る（表示は「追加1」「追加2」）。最後の回の比べる質問は第8回で聞く
   return {n: n, label: n <= 8 ? "第" + n + "回" : "追加" + (n - 8), kind: n === 1 ? "first" : (n === 8 ? "last" : "usual")};
 }
@@ -161,7 +161,22 @@ function el(tag, attrs, kids) {
 }
 
 function store(key, val) {
-  try { if (val === undefined) return JSON.parse(localStorage.getItem(key) || "null"); localStorage.setItem(key, JSON.stringify(val)); } catch (e) { return null; }
+  try {
+    if (val === undefined) {
+      var v = JSON.parse(localStorage.getItem(key) || "null");
+      if (v && v._t && Date.now() - v._t > 3 * 86400000) { localStorage.removeItem(key); return null; }
+      return v;
+    }
+    val._t = Date.now(); localStorage.setItem(key, JSON.stringify(val));
+  } catch (e) { return null; }
+}
+function clearDrafts() {
+  try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf("aisurvey_") === 0) localStorage.removeItem(k); }); } catch (e) {}
+}
+function newSid() {
+  var a = new Uint8Array(12);
+  (window.crypto || window.msCrypto).getRandomValues(a);
+  return Array.prototype.map.call(a, function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
 }
 
 function render() {
@@ -172,7 +187,7 @@ function render() {
     document.getElementById("ttl").textContent = "アンケート";
     var sel = el("select", {id: "pick"});
     sel.appendChild(el("option", {value: "", text: "選んでください"}));
-    for (var i = 1; i <= 8; i++) sel.appendChild(el("option", {value: i, text: "第" + i + "回"}));
+    for (var i = 1; i <= 10; i++) sel.appendChild(el("option", {value: i, text: i <= 8 ? "第" + i + "回" : "追加" + (i - 8)}));
     sel.addEventListener("change", function () { if (sel.value) { location.search = "?kai=" + sel.value; } });
     app.appendChild(el("div", {cls: "card"}, [el("p", {text: "何回目の講座のアンケートですか？"}), sel]));
     return;
@@ -181,6 +196,7 @@ function render() {
   document.getElementById("ttl").textContent = info.label + "のアンケート";
   var draftKey = "aisurvey_" + info.n;
   var draft = store(draftKey) || {};
+  var sid = draft._sid || newSid();  // 1回の送信の番号（押し直しても二重にしない）
 
   app.appendChild(el("div", {cls: "card lead"}, [
     el("p", {text: "講座、ありがとうございました！"}),
@@ -195,7 +211,7 @@ function render() {
   var form = el("form", {id: "f", novalidate: "novalidate"});
   var nameCard = el("div", {cls: "card q", id: "c_name"}, [
     el("p", {cls: "qt", text: "お名前"}, []),
-    el("input", {type: "text", id: "name", autocomplete: "nickname", placeholder: "ニックネームでOK", maxlength: "40"}),
+    el("input", {type: "text", id: "name", autocomplete: "nickname", placeholder: "ニックネームでOK", maxlength: "40", enterkeyhint: "done"}),
     el("p", {cls: "err", text: "お名前を入れてください"})
   ]);
   nameCard.querySelector(".qt").appendChild(el("span", {cls: "req", text: "必須"}));
@@ -228,7 +244,7 @@ function render() {
         });
         card.appendChild(box);
         if (q.other) {
-          var ot = el("input", {type: "text", id: q.id + "_other", cls: "other", placeholder: q.otherLabel || "ひとことで", maxlength: "300"});
+          var ot = el("input", {type: "text", id: q.id + "_other", cls: "other", placeholder: q.otherLabel || "ひとことで", maxlength: "300", enterkeyhint: "done"});
           card.appendChild(ot);
           box.addEventListener("change", function () {
             var on = !!box.querySelector('input[value="' + q.other + '"]:checked');
@@ -240,16 +256,34 @@ function render() {
       form.appendChild(card);
     });
   });
-  form.appendChild(el("input", {type: "text", name: "website", cls: "hp", tabindex: "-1", autocomplete: "off", "aria-hidden": "true"}));
+  form.appendChild(el("input", {type: "text", name: "x_hp", id: "x_hp", cls: "hp", tabindex: "-1", autocomplete: "off", "aria-hidden": "true"}));
   var btn = el("button", {type: "submit", cls: "send", text: "送信"});
   form.appendChild(btn);
   form.appendChild(el("p", {cls: "small", text: "送ると、池本にだけ届きます。"}));
+  form.appendChild(el("p", {cls: "small", text: "書きかけはこの端末にだけ残り、送ると消えます。"}));
   app.appendChild(form);
 
-  // 書きかけを、この端末にだけ残す（閉じても消えないように）
+  // 書きかけを、この端末にだけ残す（閉じても消えないように。名前は残さない・3日で消える）
   restore(form, draft);
-  form.addEventListener("input", function () { store(draftKey, snapshot(form)); });
-  form.addEventListener("change", function () { store(draftKey, snapshot(form)); });
+  var save = function () { var s = snapshot(form); s._sid = sid; store(draftKey, s); };
+  form.addEventListener("input", function (ev) {
+    save();
+    var c = ev.target.closest && ev.target.closest(".card.bad");
+    if (c && ev.target.value.trim()) c.classList.remove("bad");
+  });
+  form.addEventListener("change", save);
+  form.addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter" && ev.target.tagName === "INPUT" && ev.target.type === "text" && !ev.isComposing && ev.keyCode !== 229) {
+      ev.preventDefault(); ev.target.blur();
+    }
+  });
+  Array.prototype.forEach.call(form.querySelectorAll('input[type=radio]'), function (x) {
+    var lab = x.closest("label");  // 見えている丸ボタンは label の方なので、押す前の状態は label で覚える
+    (lab || x).addEventListener("pointerdown", function () { x.dataset.was = x.checked ? "1" : ""; });
+    x.addEventListener("click", function () {
+      if (x.dataset.was === "1") { x.checked = false; x.dataset.was = ""; x.dispatchEvent(new Event("change", {bubbles: true})); }
+    });
+  });
 
   form.addEventListener("submit", function (ev) {
     ev.preventDefault();
@@ -274,18 +308,21 @@ function render() {
         items.push({q: (q.star ? "★" : "") + q.no + " " + q.t, a: a});
       });
     });
-    var body = {kai: info.label, name: document.getElementById("name").value.trim(), items: items, website: form.querySelector(".hp").value};
+    var body = {kai: info.label, name: document.getElementById("name").value.trim(), items: items, sid: sid, x_hp: form.querySelector(".hp").value};
     btn.disabled = true; btn.textContent = "送っています…";
-    fetch(ENDPOINT, {method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(body)})
-      .then(function (r) { return r.json(); })
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 30000);
+    fetch(ENDPOINT, {method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined})
+      .then(function (r) { clearTimeout(timer); return r.json(); })
       .then(function (j) {
         if (!j || !j.ok) throw new Error(j && j.error);
-        try { localStorage.removeItem(draftKey); } catch (e) {}
+        clearDrafts();
         app.innerHTML = "";
         app.appendChild(el("div", {cls: "card done"}, [el("h2", {text: "送信しました"}), el("p", {text: "ご協力ありがとうございます！次の回もよろしくお願いします。"})]));
         window.scrollTo(0, 0);
       })
       .catch(function () {
+        clearTimeout(timer);
         btn.disabled = false; btn.textContent = "送信";
         alert("送れませんでした。少し時間をおいて、もう一度「送信」を押してください。書いた内容は残っています。");
       });
@@ -295,7 +332,7 @@ function render() {
 function snapshot(form) {
   var s = {};
   Array.prototype.forEach.call(form.querySelectorAll("input,textarea"), function (x) {
-    if (x.classList.contains("hp")) return;
+    if (x.classList.contains("hp") || x.id === "name") return;
     if (x.type === "radio" || x.type === "checkbox") { if (x.checked) s[x.id] = true; }
     else if (x.id) s[x.id] = x.value;
   });
@@ -303,6 +340,7 @@ function snapshot(form) {
 }
 function restore(form, s) {
   Object.keys(s || {}).forEach(function (id) {
+    if (id.charAt(0) === "_") return;
     var x = document.getElementById(id);
     if (!x) return;
     if (x.type === "radio" || x.type === "checkbox") x.checked = !!s[id];
