@@ -145,7 +145,8 @@ function kaiInfo() {
   var m = /[?&]kai=(\d{1,2})/.exec(location.search);
   var n = m ? Number(m[1]) : 0;
   if (!n) return null;
-  return {n: n, label: "第" + n + "回", kind: n === 1 ? "first" : (n >= 8 ? "last" : "usual")};
+  // 顧客管理は追加の回を 9・10 で送る（表示は「追加1」「追加2」）。最後の回の比べる質問は第8回で聞く
+  return {n: n, label: n <= 8 ? "第" + n + "回" : "追加" + (n - 8), kind: n === 1 ? "first" : (n === 8 ? "last" : "usual")};
 }
 
 function el(tag, attrs, kids) {
