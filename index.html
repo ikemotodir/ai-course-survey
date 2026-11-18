@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI講座 アンケート｜STUDIO PATTI</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=DotGothic16&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20261030d">
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><span class="brand"><img src="img/nav_logo.png" alt="STUDIO PATTI"></span><span class="chip">アンケート</span></header>
+  <section class="hero">
+    <span class="who">がんばる親の「やりたい」を叶えるAI講座</span>
+    <h1 id="ttl">アンケート</h1>
+    <div class="lvrow"><div class="msg"><p>講座、ありがとうございました！</p><span class="cur"></span></div><span class="spr" aria-hidden="true"></span></div>
+  </section>
+  <main id="app"><noscript><div class="card">このページは JavaScript を使います。ブラウザの設定で有効にしてください。</div></noscript></main>
+  <footer>合同会社スタジオパッチ　池本 将</footer>
+</div>
+<script src="form.js?v=20261030d"></script>
+<script>
+// 各回のアンケート（2026-10-30）。?kai=1 が第1回、?kai=2〜7 がふだんの回、?kai=8 が最後の回、?kai=9・10 が追加の回
+var USE = [
+  "講座を良くするためと、これから受ける方への案内づくりに活用します。",
+  "案内に使うときは、お名前を出さず人数にまとめて紹介します。",
+  "それ以外で外に出すときは、先にお見せして、OKをもらってからにします。",
+  "AIでまとめるときは、お名前を消してから入力します。"
+];
+var Q_EVERY = [
+  {id: "q1", t: "今日の感想を教えてください。", hint: "いちばん心に残ったこと、またはできたことを1つ　など", type: "text"},
+  {id: "q2", t: "分かりにくかった所や、ほかにも教えてほしい事はありますか？", hint: "なければ「なし」でOK", type: "text", small: true}
+];
+var Q_TODAY = [
+  {id: "q3", t: "今日の講座は、全体としてどうでしたか？", type: "one", o: ["とても良い", "良い", "ふつう", "いまいち", "よくない"]},
+  {id: "q4", t: "内容の分かりやすさはどうでしたか？", type: "one", o: ["よく分かった", "分かった", "ふつう", "やや難しい", "難しい"]},
+  {id: "q5", t: "今日の長さと進み方はどうでしたか？", type: "one", o: ["ちょうどいい", "速い・時間が足りない", "ゆっくり・長い"]}
+];
+var NEAR = ["結局なにに使えばいいか分からない", "AIの答えが自分っぽくない", "あれもこれもで、どれも途中", "頭の中がまとまらない", "事務（予約・お客さん管理）に時間をとられる", "家族との時間がとれない", "当てはまるものはない", "その他"];
+var USE_FREQ = ["使っていない", "月に数回", "週に数回", "ほぼ毎日"];
+var PRICE_HINT = "そう感じ始める金額を、税込・だいたいで";
+
+function kinds(n) {
+  if (n === 1) return {
+    use: [USE[0], "最後の回にも同じ質問をして、受ける前と後を比較します。"].concat(USE.slice(1)),
+    sections: [
+      {t: "毎回のアンケート", q: Q_EVERY},
+      {t: "第1回の講座について", q: Q_TODAY.concat([
+        {id: "q6", t: "申し込む前に聞いていた話と、今日の第1回はちがいましたか？", type: "one", o: ["聞いていた通り", "聞いていたより良かった", "ちがった"], other: "ちがった", otherLabel: "どこがちがいましたか"}
+      ])},
+      {t: "あなたのこと", note: "これからの回を、あなたに合わせるためにお聞きします。", q: [
+        {id: "q7", t: "申し込む前は、AIをどれくらい使っていましたか？", type: "one", o: ["使っていなかった", "月に数回", "週に数回", "ほぼ毎日"]},
+        {id: "q8", t: "講座を受ける前、近かったのはどれですか？", hint: "いくつでも", type: "many", o: NEAR, other: "その他", col: true},
+        {id: "q9", t: "講座が終わったとき、何ができていたら受けてよかったと思えますか？", hint: "ひとつでOK。今日書いた目標を、そのまま書き写してもOK", ph: "例：予約の受付を、AIで作った道具に任せている", type: "text"},
+        {id: "q10", t: "AIに任せたいことはどれですか？", hint: "いくつでも", type: "many", o: ["SNSの投稿", "文章（ブログ・お知らせ・メール）", "画像・デザイン", "動画", "お客さん・予約の管理", "事務（資料・お金の管理）", "調べもの・学び", "アプリや道具づくり", "その他"], other: "その他"}
+      ]},
+      {t: "申し込んだときのこと", note: "これから受ける方に届けるために、今回だけお聞きします。", q: [
+        {id: "q11", t: "申し込む前に、迷ったこと・心配だったことはありますか？", hint: "いくつでも", type: "many", o: ["料金", "時間がとれるか", "ついていけるか", "パソコンやAIの準備", "AIの利用料（月々）", "家族への相談", "分からない時に質問できるか", "申し込み前の説明に分かりにくい所があった", "特になかった", "その他"], other: "その他", col: true},
+        {id: "q12", t: "独学・YouTube・ほかの講座などではなく、この講座にした決め手は何ですか？", hint: "いくつでも", type: "many", o: ["池本の実際のAI画面を見た", "伴走してくれそうだった", "自分の悩みに合っていた", "料金", "その他"], other: "その他", col: true},
+        {id: "q13", t: "相談や案内で、心に残った言葉を教えてください。", hint: "特になければ「なし」でOK", type: "text", small: true}
+      ]},
+      // 2026-11-13 問いの中のかぎかっこ（引用ではなく強調）を外した。値段の分析（顧客管理 survey.js の PSM_Q）は前の言い方も読む
+      {t: "料金について", note: "この講座（オンライン・全8回・1回60分）の値段の感じ方をお聞きします。払った金額ではなく、あなたの感覚で答えてください。", q: [
+        {id: "p1", t: "いくらだと、安すぎて内容が心配だと感じますか？", hint: PRICE_HINT, type: "yen"},
+        {id: "p2", t: "いくらだと、安い（お得）と感じますか？", hint: PRICE_HINT, type: "yen", after: "p1"},
+        {id: "p3", t: "いくらだと、高いけれど受ける価値はあると感じますか？", hint: PRICE_HINT, type: "yen", after: "p2"},
+        {id: "p4", t: "いくらだと、高すぎて受けないと感じますか？", hint: PRICE_HINT, type: "yen", after: "p3"}
+      ]}
+    ]
+  };
+  //   第2章（道のりをぜんぶ書き出す／AIに相談・AIが作業・自分で に分ける／Claude Code に1つ頼む）に合わせた問い。答えは今までと同じく顧客管理のその人の欄に出る
+  if (n === 2) return {
+    use: USE,
+    sections: [
+      {t: "毎回のアンケート", q: Q_EVERY},
+      {t: "第2回の講座について", q: Q_TODAY.concat([
+        {id: "q6", t: "「やりたい事」までの地図は理解できましたか？", type: "one", o: ["よく理解できた", "だいたい理解できた", "まだよく分からない"]},
+        {id: "q7", t: "AIに相談する所・AIに作業してもらう所・自分でやる所について、今後は自分でも分けられそうですか？", type: "one", o: ["分けられそう", "少しなら分けられそう", "まだ難しい"]},
+        {id: "q8", t: "Claude Code に、何か頼んでみましたか？", type: "one", o: ["講座の中で頼めた", "講座のあとで頼めた", "まだ頼めていない"], other: "まだ頼めていない", otherLabel: "止まっている所を、ひとこと"},
+        {id: "q9", t: "頼んだ場合は何を頼みましたか？", hint: "まだ頼んでいなければ、なしでOK", type: "text", small: true},
+        {id: "q10", t: "次の回までに、AIに頼んでみたい事をひとつ教えてください。", hint: "今日の地図の中から、ひとつ", ph: "例：お客さんへのお知らせ文を作ってもらう", type: "text", small: true}
+      ])}
+    ]
+  };
+  //   第3章（AIの本質＝脳をまねた仕組みなので間違える／弱点＝カットオフ・ハルシネーション／抑え方＝グラウンディング・RAG・絶対ルール）に合わせた問い
+  if (n === 3) return {
+    use: USE,
+    sections: [
+      {t: "毎回のアンケート", q: Q_EVERY},
+      {t: "第3回の講座について", q: Q_TODAY.concat([
+        {id: "q6", t: "AIが間違えたり、それっぽい嘘をついたりする理由は、納得できましたか？", type: "one", o: ["よく納得できた", "だいたい納得できた", "まだよく分からない"]},
+        {id: "q7", t: "今日の言葉のうち、意味が分かったものはどれですか？", hint: "いくつでも", type: "many", o: ["カットオフ", "ハルシネーション", "グラウンディング", "RAG", "どれもまだよく分からない"]},
+        {id: "q8", t: "講座の前に、AIを使っていて感じたことがある不満はどれですか？", hint: "いくつでも", type: "many", o: ["間違える", "それっぽい嘘をつく", "注意したミスを何回も繰り返す", "特になかった", "その他"], other: "その他"},
+        {id: "q9", t: "絶対ルールを、自分の Claude Code に覚えさせましたか？", type: "one", o: ["講座の中でできた", "講座のあとでできた", "まだできていない"], other: "まだできていない", otherLabel: "止まっている所を、ひとこと"},
+        {id: "q10", t: "これから自分の絶対ルールに足したい決まりを、ひとつ教えてください。", hint: "思いつかなければ、なしでOK", ph: "例：お客さんの名前は、文に出さない", type: "text", small: true}
+      ])}
+    ]
+  };
+  if (n === 8) return {
+    use: [USE[0], "第1回の答えと比べて、受ける前と後の変化を確認します。"].concat(USE.slice(1)),
+    sections: [
+      {t: "毎回のアンケート", q: Q_EVERY},
+      {t: "今日の講座について", q: Q_TODAY},
+      {t: "講座を受けてみて", note: "第1回の答えと比べるために、同じ質問をします。", q: [
+        {id: "q6", t: "今は、AIをどれくらい使っていますか？", type: "one", o: USE_FREQ},
+        {id: "q7", t: "今の自分に近いのはどれですか？", hint: "いくつでも", type: "many", o: NEAR, other: "その他", col: true},
+        {id: "q8", t: "第1回で書いた、受けてよかったと思えることは、できましたか？", type: "one", o: ["できた", "一部できた", "まだ"], other: "一部できた", otherLabel: "どこまでできたか、ひとこと"},
+        {id: "q9", t: "講座の値段について、受けてみてどう感じますか？", type: "one", o: ["安い", "ちょうどいい", "高い"]},
+        {id: "q10", t: "この講座が合いそうな人は、まわりにいますか？", hint: "いくつでも。お名前や、だれか分かる書き方はしないでください", type: "many", o: ["会社で働く親", "お店や教室をしている親", "フリーランスの親", "いない・わからない"]}
+      ]}
+    ]
+  };
+  return {
+    use: USE,
+    sections: [
+      {t: "毎回のアンケート", q: Q_EVERY},
+      {t: "今日の講座について", q: Q_TODAY}
+    ]
+  };
+}
+
+// 最後の質問の下のひとこと: 第1〜7回は「次の回もよろしく」、最後の回と追加の回はお礼だけ
+function endNote(n) { return n < 8 ? "ありがとうございました！\n第" + (n + 1) + "回もよろしくお願いします♪" : "ありがとうございました！"; }
+// 送ったあとの文: 最後の回（8）と追加の回（9・10）は「次の回も」を付けない
+AIFORM.start({form: "survey", title: "アンケート", draft: "aisurvey_", kinds: kinds, endNote: endNote, doneText: function (n) { return n < 8 ? "ご協力ありがとうございます！次の回もよろしくお願いします。" : "ご協力ありがとうございます！"; }});
+</script>
+</body>
+</html>
